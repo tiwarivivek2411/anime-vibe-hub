@@ -1,15 +1,32 @@
 import requests
 import random
+from typing import Optional
 
-def get_anime_image(category="sfw", type="waifu"):
+
+def get_anime_image(category: str = "sfw", type: str = "waifu", width: Optional[int] = None, height: Optional[int] = None) -> Optional[str]:
+    """Fetch a random anime image URL from waifu.pics API.
+
+    Parameters
+    ----------
+    category: str
+        "sfw" or "nsfw" (default "sfw").
+    type: str
+        Type of image, e.g., "waifu", "neko", etc.
+    width, height: Optional[int]
+        Desired resolution. If provided, the function will attempt to request an image
+        that meets or exceeds these dimensions. The waifu.pics API does not support
+        explicit size parameters, so we append a query string that many image hosts
+        respect (e.g., "?size=WIDTHxHEIGHT"). If the API ignores it, we simply return
+        the URL.
     """
-    Fetches a random anime image URL from waifu.pics API.
-    Categories: sfw, nsfw (defaulting to sfw for safety)
-    Types: waifu, neko, shinobu, megumin, bully, cuddle, cry, hug, awoo, kiss, lick, pat, smug, bonk, yeet, blush, smile, wave, highfive, handhold, nom, bite, slap, kill, kick, happy, wink, poke, dance, cringe
-    """
-    url = f"https://api.waifu.pics/{category}/{type}"
+    base_url = f"https://api.waifu.pics/{category}/{type}"
+    # Some APIs allow size hints via query parameters; we add them if given.
+    if width and height:
+        url = f"{base_url}?size={width}x{height}"
+    else:
+        url = base_url
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
         data = response.json()
         return data.get("url")
