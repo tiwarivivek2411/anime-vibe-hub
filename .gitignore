@@ -1,0 +1,10 @@
+.DS_Store
+venv/
+.pytest_cache/
+vibe_cache/
+build/
+dist/
+__pycache__/
+*.pyc
+media_library/
+*.log

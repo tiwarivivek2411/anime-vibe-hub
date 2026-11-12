@@ -1,2 +1,9 @@
 requests
 pyobjc
+customtkinter
+pillow
+pyinstaller
+pystray
+kivy
+buildozer
+flask
